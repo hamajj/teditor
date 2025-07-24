@@ -1,7 +1,13 @@
 import argparse
 import curses
 import sys
+import discordrpc
+import threading
+import os
 
+sys.stdout = open(os.devnull, 'w')
+
+rpc = discordrpc.RPC(app_id="1398062515409256558")
 
 class Buffer:
     def __init__(self, lines):
@@ -137,12 +143,20 @@ def right(window, buffer, cursor):
     window.down(buffer, cursor)
     window.horizontal_scroll(cursor)
 
-
 def main(stdscr):
     parser = argparse.ArgumentParser()
     parser.add_argument("filename")
     args = parser.parse_args()
     filename = ""
+
+    def run_rpc():
+        rpc.set_activity(
+            state= f"working on file: {args.filename}"
+            #details= f"line: {cursor.row + 1}, column: {cursor.col + 1}",
+        )
+        rpc.run()
+
+    threading.Thread(target=run_rpc, daemon=True).start()
 
     with open(args.filename) as f:
         buffer = Buffer(f.read().splitlines())
