@@ -1,4 +1,4 @@
-dist
-build
-teditor.spec
+./dist
+./build
+./teditor.spec
 __pycache__
