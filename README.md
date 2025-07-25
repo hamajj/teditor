@@ -1,4 +1,4 @@
-# Teditor
+# Teditor (W.I.P.)
 
 **Teditor** is a terminal-based text editor similar to *nano*, built with Python 🐍
 
