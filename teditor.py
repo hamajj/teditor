@@ -2,6 +2,23 @@ import argparse
 import curses
 import sys
 import os
+import pygments
+from pygments.lexers import PythonLexer
+from pygments.lexers.c_cpp import CLexer
+from pygments.lexers.c_cpp import CppLexer
+from pygments.lexers.javascript import JavascriptLexer
+from pygments.lexers.css import CssLexer
+from pygments.lexers.html import HtmlLexer
+from pygments.lexers.markup import MarkdownLexer
+from pygments.lexers.rust import RustLexer
+from pygments.lexers.json5 import Json5Lexer
+from pygments.lexers.jvm import JavaLexer
+from pygments.lexers.jvm import KotlinLexer
+from pygments.lexers.dotnet import CSharpLexer
+from pygments.lexers.go import GoLexer
+from pygments.lexers.esoteric import BrainfuckLexer
+
+from pygments.token import Token
 
 class Buffer:
     def __init__(self, lines):
@@ -35,14 +52,12 @@ class Buffer:
     def delete(self, cursor):
         row, col = cursor.row, cursor.col
         if row > self.bottom or col > len(self[row]):
-            return  # Out of bounds, do nothing
+            return
         current = self.lines[row]
         if col < len(current):
-            # Delete character at col
             new = current[:col] + current[col + 1:]
             self.lines[row] = new
         elif row < self.bottom:
-            # Merge with next line, even if next line is empty
             self.lines[row] = current + self.lines[row + 1]
             del self.lines[row + 1]
 
@@ -137,6 +152,50 @@ def right(window, buffer, cursor):
     window.down(buffer, cursor)
     window.horizontal_scroll(cursor)
 
+def highlight_line(line, lang):
+    result = []
+    if lang == 'python':
+        lexer = PythonLexer()
+    elif lang == 'c':
+        lexer = CLexer()
+    elif lang == 'javascript':
+        lexer = JavascriptLexer()
+    elif lang == 'css':
+        lexer = CssLexer() 
+    elif lang == 'html':
+        lexer = HtmlLexer()
+    elif lang == 'markdown':
+        lexer = MarkdownLexer()
+    elif lang == 'rust':    
+        lexer = RustLexer()
+    elif lang == 'c++':
+        lexer = CppLexer()
+    elif lang == 'json':  
+        lexer = Json5Lexer()
+    elif lang == 'java':
+        lexer = JavaLexer()
+    elif lang == 'kotlin':
+        lexer = KotlinLexer()
+    elif lang == 'csharp':
+        lexer = CSharpLexer()
+    elif lang == "go":
+        lexer = GoLexer()
+    elif lang == "brainfuck":
+        lexer = BrainfuckLexer()
+    else:
+        lexer = None
+    for token, text in pygments.lex(line, lexer):
+        if token in Token.Keyword:
+            color = 2  # green
+        elif token in Token.String:
+            color = 3  # yellow
+        elif token in Token.Comment:
+            color = 4  # cyan
+        else:
+            color = 1  # default
+        result.append((text, color))
+    return result
+
 def main(stdscr):
     parser = argparse.ArgumentParser()
     parser.add_argument("filename")
@@ -146,7 +205,7 @@ def main(stdscr):
     try:
         with open(args.filename) as f:
             buffer = Buffer(f.read().splitlines())
-            filename = f.name
+            filename = os.path.basename(f.name)
     except FileNotFoundError:
         raise FileNotFoundError(f"File '{args.filename}' not found.")
 
@@ -154,6 +213,46 @@ def main(stdscr):
     cursor = Cursor()
 
     curses.mousemask(curses.ALL_MOUSE_EVENTS | curses.REPORT_MOUSE_POSITION)
+    curses.start_color()
+
+    if filename.endswith(".py"):
+        lang = 'python'
+    elif filename.endswith(".c"):
+        lang = 'c'
+    elif filename.endswith(".js"):
+        lang = 'javascript'
+    elif filename.endswith(".css"):
+        lang = 'css'
+    elif filename.endswith(".html"):
+        lang = 'html'
+    elif filename.endswith(".md"):
+        lang = 'markdown'
+    elif filename.endswith(".rs"):
+        lang = 'rust'
+    elif filename.endswith(".cpp") or filename.endswith(".cxx") or filename.endswith(".cc"):
+        lang = 'c++'
+    elif filename.endswith(".json"):
+        lang = 'json'
+    elif filename.endswith(".json5"):
+        lang = 'json5'
+    elif filename.endswith(".java"):
+        lang = 'java'
+    elif filename.endswith(".kt") or filename.endswith(".kts"):
+        lang = 'kotlin'
+    elif filename.endswith(".cs"):
+        lang = 'csharp'
+    elif filename.endswith(".go"):
+        lang = "go"
+    elif filename.endswith(".bf"):
+        lang = "brainfuck"
+    else:
+        lang = 'none'
+
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)  # default
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)  # keyword
+    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK) # string
+    curses.init_pair(4, curses.COLOR_CYAN, curses.COLOR_BLACK)   # comment
+
 
     saved = False
 
@@ -161,10 +260,27 @@ def main(stdscr):
         stdscr.erase()
         for row, line in enumerate(buffer[window.row:window.row + window.n_rows]):
             if row == cursor.row - window.row and window.col > 0:
-                line = "Ã‚Â«" + line[window.col + 1:]
+                line = "Ãƒâ€šÃ‚Â«" + line[window.col + 1:]
             if len(line) > window.n_cols:
-                line = line[:window.n_cols - 1] + "Ã‚Â»"
-            stdscr.addstr(row, 0, line)
+                line = line[:window.n_cols - 1] + "Ãƒâ€šÃ‚Â»"
+            col = 0
+            if lang == "none":
+                text = line
+                if len(text) > window.n_cols:
+                    text = text[:window.n_cols]
+                stdscr.attron(curses.color_pair(1))
+                stdscr.addstr(row, col, text)
+                stdscr.attroff(curses.color_pair(1))
+            else:
+                for text, color in highlight_line(line, lang):
+                    if col + len(text) > window.n_cols:
+                        text = text[:window.n_cols - col]
+                    stdscr.attron(curses.color_pair(color))
+                    stdscr.addstr(row, col, text)
+                    stdscr.attroff(curses.color_pair(color))
+                    col += len(text)
+                    if col >= window.n_cols:
+                        break
 
         cursor_y, cursor_x = window.translate(cursor)
         if 0 <= cursor_y < window.n_rows and 0 <= cursor_x < window.n_cols:
