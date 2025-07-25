@@ -35,9 +35,7 @@
 
 ## 🖼️ Screenshots
 
-![Teditor Screenshot 2](https://i.imgur.com/X4J2K9B.png)
-<<<<<<< HEAD
-=======
+![Teditor Screenshot](https://i.imgur.com/X4J2K9B.png)
 
 ## Installation
 
@@ -52,4 +50,3 @@ cd teditor
 ```bash
 pip install -e .
 ```
->>>>>>> 4117d4e (setup.py, klasorler olusturuldu, readme guncellendi)
