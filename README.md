@@ -35,7 +35,7 @@
 
 ## 🖼️ Screenshots
 
-![Teditor Screenshot](https://i.imgur.com/X4J2K9B.png)
+![Teditor Screenshot](https://i.imgur.com/4uKe7f4.png)
 
 ## Installation
 
