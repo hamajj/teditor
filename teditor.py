@@ -17,6 +17,8 @@ from pygments.lexers.jvm import KotlinLexer
 from pygments.lexers.dotnet import CSharpLexer
 from pygments.lexers.go import GoLexer
 from pygments.lexers.esoteric import BrainfuckLexer
+from pygments.lexers.shell import BashLexer
+from pygments.lexers.textedit import VimLexer
 
 from pygments.token import Token
 
@@ -182,6 +184,10 @@ def highlight_line(line, lang):
         lexer = GoLexer()
     elif lang == "brainfuck":
         lexer = BrainfuckLexer()
+    elif lang == "bash":
+        lexer = BashLexer()
+    elif lang == "vim":
+        lexer = VimLexer()
     else:
         lexer = None
     for token, text in pygments.lex(line, lexer):
@@ -203,7 +209,7 @@ def main(stdscr):
     filename = ""
 
     try:
-        with open(args.filename) as f:
+        with open(args.filename, "r", encoding="utf-8") as f:
             buffer = Buffer(f.read().splitlines())
             filename = os.path.basename(f.name)
     except FileNotFoundError:
@@ -245,6 +251,10 @@ def main(stdscr):
         lang = "go"
     elif filename.endswith(".bf"):
         lang = "brainfuck"
+    elif filename.endswith(".sh"): 
+        lang = "bash"
+    elif filename.endswith(".vim"):
+        lang = "vim"
     else:
         lang = 'none'
 
