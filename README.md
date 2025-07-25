@@ -36,3 +36,20 @@
 ## 🖼️ Screenshots
 
 ![Teditor Screenshot 2](https://i.imgur.com/X4J2K9B.png)
+<<<<<<< HEAD
+=======
+
+## Installation
+
+### Clone the project
+
+```bash
+git clone https://github.com/hamajj/teditor
+cd teditor
+```
+
+### Install via pip (editable mode)
+```bash
+pip install -e .
+```
+>>>>>>> 4117d4e (setup.py, klasorler olusturuldu, readme guncellendi)

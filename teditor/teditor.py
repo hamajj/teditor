@@ -11,7 +11,6 @@ from pygments.lexers.css import CssLexer
 from pygments.lexers.html import HtmlLexer
 from pygments.lexers.markup import MarkdownLexer
 from pygments.lexers.rust import RustLexer
-from pygments.lexers.json5 import Json5Lexer
 from pygments.lexers.jvm import JavaLexer
 from pygments.lexers.jvm import KotlinLexer
 from pygments.lexers.dotnet import CSharpLexer
@@ -21,7 +20,11 @@ from pygments.lexers.shell import BashLexer
 from pygments.lexers.textedit import VimLexer
 
 from pygments.token import Token
+import platform
 
+if platform.system() == "Linux":
+    os.system("stty -ixon")
+    
 class Buffer:
     def __init__(self, lines):
         self.lines = lines
@@ -172,8 +175,6 @@ def highlight_line(line, lang):
         lexer = RustLexer()
     elif lang == 'c++':
         lexer = CppLexer()
-    elif lang == 'json':  
-        lexer = Json5Lexer()
     elif lang == 'java':
         lexer = JavaLexer()
     elif lang == 'kotlin':
@@ -237,10 +238,6 @@ def main(stdscr):
         lang = 'rust'
     elif filename.endswith(".cpp") or filename.endswith(".cxx") or filename.endswith(".cc"):
         lang = 'c++'
-    elif filename.endswith(".json"):
-        lang = 'json'
-    elif filename.endswith(".json5"):
-        lang = 'json5'
     elif filename.endswith(".java"):
         lang = 'java'
     elif filename.endswith(".kt") or filename.endswith(".kts"):
@@ -295,7 +292,10 @@ def main(stdscr):
         cursor_y, cursor_x = window.translate(cursor)
         if 0 <= cursor_y < window.n_rows and 0 <= cursor_x < window.n_cols:
             stdscr.attron(curses.A_REVERSE)
-            line = buffer[cursor.row]
+            if 0 <= cursor.row < len(buffer):
+                line = buffer[cursor.row]
+            else:
+                line = ""
             ch = line[cursor.col] if cursor.col < len(line) else " "
             stdscr.addstr(cursor_y, cursor_x, ch)
             stdscr.attroff(curses.A_REVERSE)
@@ -393,6 +393,5 @@ def main(stdscr):
             for _ in k:
                 right(window, buffer, cursor)
 
-
-if __name__ == "__main__":
+def cli_main():
     curses.wrapper(main)
