@@ -186,13 +186,13 @@ def highlight_line(line, lang):
         lexer = None
     for token, text in pygments.lex(line, lexer):
         if token in Token.Keyword:
-            color = 2  # green
+            color = 2  # yesil
         elif token in Token.String:
-            color = 3  # yellow
+            color = 3  # sari
         elif token in Token.Comment:
-            color = 4  # cyan
+            color = 4  # yesil + mavi
         else:
-            color = 1  # default
+            color = 1  # duz yazi
         result.append((text, color))
     return result
 
@@ -248,10 +248,10 @@ def main(stdscr):
     else:
         lang = 'none'
 
-    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)  # default
-    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)  # keyword
-    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK) # string
-    curses.init_pair(4, curses.COLOR_CYAN, curses.COLOR_BLACK)   # comment
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)  # duz yazi
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)  # if else for falan onlar
+    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK) # string yazilar
+    curses.init_pair(4, curses.COLOR_CYAN, curses.COLOR_BLACK)   # yorumlar
 
 
     saved = False
@@ -364,13 +364,13 @@ def main(stdscr):
         elif k == "KEY_MOUSE":
             try:
                 _, mx, my, _, mouse_state = curses.getmouse()
-                # Scroll up
+                # yukari kaydirma
                 for _ in range(4):
                     if mouse_state & curses.BUTTON4_PRESSED:
                         if window.row > 0:
                             window.row -= 1
                             cursor.row = max(cursor.row - 1, 0)
-                # Scroll down
+                # asagi kaydirma
                 for _ in range(4):
                     if mouse_state & curses.BUTTON5_PRESSED:
                         if window.bottom < len(buffer) - 1:
