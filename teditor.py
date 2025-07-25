@@ -1,13 +1,7 @@
 import argparse
 import curses
 import sys
-import discordrpc
-import threading
 import os
-
-sys.stdout = open(os.devnull, 'w')
-
-rpc = discordrpc.RPC(app_id="1398062515409256558")
 
 class Buffer:
     def __init__(self, lines):
@@ -149,18 +143,12 @@ def main(stdscr):
     args = parser.parse_args()
     filename = ""
 
-    def run_rpc():
-        rpc.set_activity(
-            state= f"working on file: {args.filename}"
-            #details= f"line: {cursor.row + 1}, column: {cursor.col + 1}",
-        )
-        rpc.run()
-
-    threading.Thread(target=run_rpc, daemon=True).start()
-
-    with open(args.filename) as f:
-        buffer = Buffer(f.read().splitlines())
-        filename = f.name
+    try:
+        with open(args.filename) as f:
+            buffer = Buffer(f.read().splitlines())
+            filename = f.name
+    except FileNotFoundError:
+        raise FileNotFoundError(f"File '{args.filename}' not found.")
 
     window = Window(curses.LINES - 1, curses.COLS - 1)
     cursor = Cursor()
@@ -187,11 +175,11 @@ def main(stdscr):
             stdscr.attroff(curses.A_REVERSE)
 
         status = (
-            f"<< Teditor >>    File: {filename} | Ln {cursor.row+1}, Col {cursor.col+1} | "
+            f"<< Teditor >>   File: {filename} | Ln {cursor.row+1}, Col {cursor.col+1} | "
             "Ctrl+S: Save  Ctrl+Q: Quit"
         )
         if saved:
-            status += "   file saved"
+            status += "   File Saved"
         stdscr.attron(curses.A_REVERSE)
         stdscr.addstr(window.n_rows, 0, status[:window.n_cols - 1])
         stdscr.attroff(curses.A_REVERSE)
@@ -235,19 +223,39 @@ def main(stdscr):
             if (cursor.row, cursor.col) > (0, 0):
                 left(window, buffer, cursor)
                 buffer.delete(cursor)
+        elif k == "\t":  # Tab key
+            buffer.insert(cursor, "    ")
+            right(window, buffer, cursor)
+            right(window, buffer, cursor)
+            right(window, buffer, cursor)
+            right(window, buffer, cursor)
+        elif k == "(":
+            buffer.insert(cursor, "()")
+            right(window, buffer, cursor)
+        elif k == "[":
+            buffer.insert(cursor, "[]")
+            right(window, buffer, cursor)
+        elif k == "{":
+            buffer.insert(cursor, "{}")
+            right(window, buffer, cursor)
+        elif k == '"':
+            buffer.insert(cursor, '""')
+            right(window, buffer, cursor) 
         elif k == "KEY_MOUSE":
             try:
                 _, mx, my, _, mouse_state = curses.getmouse()
                 # Scroll up
-                if mouse_state & curses.BUTTON4_PRESSED:
-                    if window.row > 0:
-                        window.row -= 1
-                        cursor.row = max(cursor.row - 1, 0)
+                for _ in range(4):
+                    if mouse_state & curses.BUTTON4_PRESSED:
+                        if window.row > 0:
+                            window.row -= 1
+                            cursor.row = max(cursor.row - 1, 0)
                 # Scroll down
-                elif mouse_state & curses.BUTTON5_PRESSED:
-                    if window.bottom < len(buffer) - 1:
-                        window.row += 1
-                        cursor.row = min(cursor.row + 1, len(buffer) - 1)
+                for _ in range(4):
+                    if mouse_state & curses.BUTTON5_PRESSED:
+                        if window.bottom < len(buffer) - 1:
+                            window.row += 1
+                            cursor.row = min(cursor.row + 1, len(buffer) - 1)
             except Exception:
                 pass
         else:
