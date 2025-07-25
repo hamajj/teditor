@@ -161,9 +161,9 @@ def main(stdscr):
         stdscr.erase()
         for row, line in enumerate(buffer[window.row:window.row + window.n_rows]):
             if row == cursor.row - window.row and window.col > 0:
-                line = "Â«" + line[window.col + 1:]
+                line = "Ã‚Â«" + line[window.col + 1:]
             if len(line) > window.n_cols:
-                line = line[:window.n_cols - 1] + "Â»"
+                line = line[:window.n_cols - 1] + "Ã‚Â»"
             stdscr.addstr(row, 0, line)
 
         cursor_y, cursor_x = window.translate(cursor)
@@ -214,6 +214,12 @@ def main(stdscr):
             window.horizontal_scroll(cursor)
         elif k == "KEY_RIGHT":
             right(window, buffer, cursor)
+        elif k == "KEY_HOME":
+            cursor.col = 0
+            window.col = 0
+        elif k == "KEY_END":
+            cursor.col = len(buffer[cursor.row])
+            window.col = max(0, len(buffer[cursor.row]) - window.n_cols + 1)
         elif k == "\n":
             buffer.split(cursor)
             right(window, buffer, cursor)
@@ -225,10 +231,8 @@ def main(stdscr):
                 buffer.delete(cursor)
         elif k == "\t":  # Tab key
             buffer.insert(cursor, "    ")
-            right(window, buffer, cursor)
-            right(window, buffer, cursor)
-            right(window, buffer, cursor)
-            right(window, buffer, cursor)
+            for _ in range(4):
+                right(window, buffer, cursor)
         elif k == "(":
             buffer.insert(cursor, "()")
             right(window, buffer, cursor)
