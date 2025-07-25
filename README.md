@@ -46,7 +46,7 @@ git clone https://github.com/hamajj/teditor
 cd teditor
 ```
 
-### Install via pip (editable mode)
+### Install via pip
 ```bash
 pip install -e .
 ```
