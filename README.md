@@ -2,6 +2,8 @@
 
 **Teditor** is a terminal-based text editor similar to *nano*, built with Python 🐍
 
+### **NOTE**: This project is Work In Progress, expect bugs.
+
 ## 🗂️ Supported Languages
 
 - C
@@ -16,7 +18,7 @@
 - Java
 - JSON
 - Kotlin
-- Markdown *(currently using Teditor)*
+- Markdown *(written using teditor)*
 - Rust
 - Bash
 - Vim
@@ -34,3 +36,5 @@
 ## 🖼️ Screenshots
 
 ![Teditor Screenshot](https://i.imgur.com/mWucrYr.png)
+
+![Teditor Screenshot 2](https://i.imgur.com/X4J2K9B.png)
