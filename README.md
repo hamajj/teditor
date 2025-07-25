@@ -35,6 +35,4 @@
 
 ## 🖼️ Screenshots
 
-![Teditor Screenshot](https://i.imgur.com/mWucrYr.png)
-
 ![Teditor Screenshot 2](https://i.imgur.com/X4J2K9B.png)
