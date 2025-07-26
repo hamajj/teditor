@@ -267,9 +267,9 @@ def main(stdscr):
         stdscr.erase()
         for row, line in enumerate(buffer[window.row:window.row + window.n_rows]):
             if row == cursor.row - window.row and window.col > 0:
-                line = "Ãƒâ€šÃ‚Â«" + line[window.col + 1:]
+                line = "«" + line[window.col + 1:]
             if len(line) > window.n_cols:
-                line = line[:window.n_cols - 1] + "Ãƒâ€šÃ‚Â»"
+                line = line[:window.n_cols - 1] + "»"
             col = 0
             if lang == "none":
                 text = line
