@@ -193,11 +193,13 @@ def highlight_line(line, lang):
         lexer = None
     for token, text in pygments.lex(line, lexer):
         if token in Token.Keyword:
-            color = 2  # yesil
+            color = 4  # camgobegi
         elif token in Token.String:
-            color = 3  # sari
+            color = 8    # kirmizi
         elif token in Token.Comment:
-            color = 4  # yesil + mavi
+            color = 2  # yesil
+        elif token in Token.Name.Builtin or token in Token.Name.Function:
+            color = 3 # sari
         else:
             color = 1  # duz yazi
         result.append((text, color))
@@ -255,11 +257,14 @@ def main(stdscr):
     else:
         lang = 'none'
 
-    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)  # duz yazi
-    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)  # if else for falan onlar
-    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK) # string yazilar
-    curses.init_pair(4, curses.COLOR_CYAN, curses.COLOR_BLACK)   # yorumlar
-
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)  # beyaz
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)  # yesil
+    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK) # sari
+    curses.init_pair(4, curses.COLOR_CYAN, curses.COLOR_BLACK)   # camgobegi
+    curses.init_pair(5, curses.COLOR_RED, curses.COLOR_BLACK)  # kirmizi
+    curses.init_pair(6, curses.COLOR_MAGENTA, curses.COLOR_BLACK)  # mor
+    curses.init_color(1, int(202/255*1000), int(143/255*1000), int(118/255*1000))
+    curses.init_pair(8, 1, curses.COLOR_BLACK)  # light pink on black
 
     saved = False
 
@@ -319,7 +324,7 @@ def main(stdscr):
                 f.write("\n".join(buffer.lines))
             saved = True
             status = (
-                f"<< Teditor >>    File: {filename} | Ln {cursor.row+1}, Col {cursor.col+1} | "
+                f"<< Teditor >>   File: {filename} | Ln {cursor.row+1}, Col {cursor.col+1} | "
                 "Ctrl+S: Save  Ctrl+Q: Quit      File Saved"
             )
             stdscr.attron(curses.A_REVERSE)
