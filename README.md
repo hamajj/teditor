@@ -46,7 +46,7 @@
 ./install_unix.sh  # other unix based
 ```
 
-###
+### Install manually 
 
 #### Clone the project
 
