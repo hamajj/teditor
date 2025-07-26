@@ -4,3 +4,5 @@ teditor.spec
 __pycache__/
 .vscode/
 teditor.egg-info/
+code_examples/
+teditor/__pycache__/
