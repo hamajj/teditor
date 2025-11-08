@@ -39,6 +39,11 @@
 
 ## Installation
 
+### NOTE: Make sure that you have $HOME/.local/bin in your $PATH variable.
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
 ### Clone the project
 
 ```bash
@@ -57,7 +62,13 @@ pip install -e .
 ```
 
 ## Usage 
+
+### Opening a file
 ```bash
 teditor <filename>
 ```
+
+### Keybinds
+- Ctrl + S ----> Save the current edited file
+- Ctrl + Q ----> Quit the editor
 
