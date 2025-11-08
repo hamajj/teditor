@@ -39,30 +39,25 @@
 
 ## Installation
 
-### Installation via script (Recomended)
-```bash
-.\install_win.bat  # windows
-
-./install_unix.sh  # other unix based
-```
-
-### Install manually 
-
-#### Clone the project
+### Clone the project
 
 ```bash
 git clone https://github.com/hamajj/teditor
 cd teditor
 ```
 
-#### Install dependencies
+### Install dependencies
 ```bash
-pip install pygments windows-curses # windows
-
-pip install pygments # other unix based
+pip install -r requirements.txt
 ```
 
-#### Install via pip
+### Install via pip
 ```bash
 pip install -e .
 ```
+
+## Usage 
+```bash
+teditor <filename>
+```
+
