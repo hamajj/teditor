@@ -18,7 +18,6 @@
 - Java
 - JSON
 - Kotlin
-- Markdown *(written using teditor)*
 - Rust
 - Bash
 - Vim
@@ -28,10 +27,10 @@
 - ✅ Editing Text Files  
 - ✅ Saving and Opening Files  
 - ✅ Syntax Highlighting  
-- 🕒 Themes *(in progress)*  
-- 🕒 Mouse Support *(in progress)*  
-- ❌ Searching *(not yet implemented)*  
-- ❌ Goto *(not yet implemented)*
+- 🕒 Themes *(soon...)*  
+- 🕒 Mouse Support *(soon...)*  
+- 🕒 Searching *(soon...)*  
+- 🕒 Goto *(soon...)*
 
 ## 🖼️ Screenshots
 
@@ -69,6 +68,6 @@ teditor <filename>
 ```
 
 ### Keybinds
-- Ctrl + S ----> Save the current edited file
-- Ctrl + Q ----> Quit the editor
+- Ctrl + S ---> Save the current edited file
+- Ctrl + Q ---> Quit the editor
 
