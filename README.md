@@ -1,6 +1,6 @@
 # Teditor
 
-**Teditor** is a terminal-based text editor similar to *nano*, built with Python 🐍
+**Teditor** is a command line text editor similar to *nano*, built with Python 🐍
 
 ### **NOTE**: This project is Work In Progress, expect bugs.
 
